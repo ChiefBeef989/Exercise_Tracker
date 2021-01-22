@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Exercise_Tracker</string>
+    <string name="placeholder">PLACEHOLDER</string>
+    <string name="exercise_header">Exercise Tracker</string>
+    <string name="resume">Resume</string>
+    <string name="pause">Pause</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="goal_hint">Distance goal (in meters)</string>
+    <string name="overview_header">Exercise Overview</string>
+    <string name="avg_speed">Average speed:</string>
+    <string name="total_distance">Total distance:</string>
+    <string name="time_taken">Exercise duration:</string>
+    <string name="min_altitude">Minimum altitude:</string>
+    <string name="max_altitude">Maximum altitude:</string>
+    <string name="speed_graph">Walking speed over time</string>
+    <string name="timer_start">00:00:00</string>
+</resources>
