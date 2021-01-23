@@ -13,7 +13,7 @@
         android:id="@+id/headerText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="15dp"
         android:allowUndo="false"
         android:background="@android:color/darker_gray"
         android:fontFamily="sans-serif-thin"
@@ -184,12 +184,17 @@
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
         android:background="@android:color/darker_gray"
         android:gravity="center"
         android:padding="5dp"
         android:text="@string/speed_graph"
         android:textColor="@color/white"
         android:textSize="24sp" />
+
+    <com.example.exercise_tracker.ReportGraph
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

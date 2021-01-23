@@ -28,10 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean walking;
 
+    private static MainActivity instance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        instance = this;
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -63,5 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 walking = !walking;
             }
         });
+
+    }
+    public static MainActivity getInstance(){
+        if(instance == null){
+            instance = new MainActivity();
+        }
+        return instance;
     }
 }
