@@ -41,7 +41,7 @@ public class ExerciseTracker extends Thread implements LocationListener {
     Activity mActivity;
 
     LocationManager locationManager;
-    long startTime, endTime;
+    public long startTime, endTime;
     public List<LocationMarker> locationMarkers;
 
     File gpxFile;
@@ -61,7 +61,7 @@ public class ExerciseTracker extends Thread implements LocationListener {
         super.run();
         Log.i("LocationManager", "START");
 
-        startTime = SystemClock.elapsedRealtimeNanos();
+        startTime = SystemClock.currentThreadTimeMillis();
 
         Log.i("LocationManager", "PERMISSIONS GRANTED");
         Criteria criteria = new Criteria();
@@ -95,6 +95,8 @@ public class ExerciseTracker extends Thread implements LocationListener {
     }
 
     public void endRecording(){
+
+        endTime = SystemClock.currentThreadTimeMillis();
         locationManager.removeUpdates(this);
         try{
             bufferedWriter.write("\t\t</trkseg>");
@@ -117,7 +119,11 @@ public class ExerciseTracker extends Thread implements LocationListener {
         float altitude = (float)location.getAltitude();
 
         LocalDateTime localDateTime = LocalDateTime.now();
-        locationMarkers.add(new LocationMarker(latitude,longitude,altitude,localDateTime));
+        LocationMarker tmpLocation = new LocationMarker(latitude,longitude,altitude,localDateTime);
+        locationMarkers.add(tmpLocation);
+
+        if(locationMarkers.size() > 1)
+            tmpLocation.setDistToLastLocation(tmpLocation.calculateDistance(locationMarkers.get(locationMarkers.indexOf(tmpLocation)-1)));
 
         try{
             bufferedWriter.write("\t\t\t<trkpt lat=\"" + latitude + "\" long=\"" + longitude + "\">");
