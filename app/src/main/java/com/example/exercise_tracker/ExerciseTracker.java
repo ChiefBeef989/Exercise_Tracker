@@ -36,18 +36,22 @@ import java.util.TimerTask;
 
 public class ExerciseTracker extends Thread implements LocationListener {
 
+    //singleton so all activities can access data
     private static ExerciseTracker instance;
 
+    //activity needed to access system services/permissions
     Activity mActivity;
 
+    //variables related to exercise
     LocationManager locationManager;
-    public long startTime, endTime;
     public List<LocationMarker> locationMarkers;
 
+    //variables related to creating/editing files
     File gpxFile;
     FileWriter fileWriter;
     BufferedWriter bufferedWriter;
 
+    //initialize fields and singleton
     public ExerciseTracker(Activity activity) {
         this.mActivity = activity;
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
@@ -55,27 +59,25 @@ public class ExerciseTracker extends Thread implements LocationListener {
         instance = this;
     }
 
-
     @Override
     public void run() {
         super.run();
-        Log.i("LocationManager", "START");
 
-        startTime = SystemClock.currentThreadTimeMillis();
-
-        Log.i("LocationManager", "PERMISSIONS GRANTED");
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-
+        //return if necessary permissions have not been granted
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
+        //set interval for requesting location to 5 seconds
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, this, Looper.getMainLooper());
 
+        //create .gpx file and directory
+        //access file in Android Studio by going to View->Tools->Device file explorer->/sdcard/GPSTracks/
         File root = new File("/sdcard/GPSTracks");
         root.mkdirs();
         gpxFile = new File(root,Date.from(Instant.now()).toString()+".gpx");
 
+        //create gpx structure in file
         try{
             fileWriter = new FileWriter(gpxFile,true);
             bufferedWriter = new BufferedWriter(fileWriter);
@@ -95,9 +97,10 @@ public class ExerciseTracker extends Thread implements LocationListener {
     }
 
     public void endRecording(){
-
-        endTime = SystemClock.currentThreadTimeMillis();
+        //stop requesting location updates
         locationManager.removeUpdates(this);
+
+        //write closing tags into gpx file
         try{
             bufferedWriter.write("\t\t</trkseg>");
             bufferedWriter.newLine();
@@ -111,20 +114,27 @@ public class ExerciseTracker extends Thread implements LocationListener {
         }
     }
 
-
+    /**
+     * override method from LocationListener interface
+     * @param location
+     */
     @Override
     public void onLocationChanged(@NonNull Location location) {
+        //save location data to variables
         float latitude = (float)location.getLatitude();
         float longitude = (float)location.getLongitude();
         float altitude = (float)location.getAltitude();
 
+        //create timestamp and new location marker and add it to a list
         LocalDateTime localDateTime = LocalDateTime.now();
         LocationMarker tmpLocation = new LocationMarker(latitude,longitude,altitude,localDateTime);
         locationMarkers.add(tmpLocation);
 
+        //calculate distance in meters to last location marker (skips first marker)
         if(locationMarkers.size() > 1)
             tmpLocation.setDistToLastLocation(tmpLocation.calculateDistance(locationMarkers.get(locationMarkers.indexOf(tmpLocation)-1)));
 
+        //add <trkpt> element to gpx file
         try{
             bufferedWriter.write("\t\t\t<trkpt lat=\"" + latitude + "\" long=\"" + longitude + "\">");
             bufferedWriter.newLine();
@@ -141,6 +151,7 @@ public class ExerciseTracker extends Thread implements LocationListener {
         Log.i("MARKER", "\n" + locationMarkers.get(locationMarkers.size()-1).toString());
     }
 
+    //LocationListener methods not used by this class
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
@@ -156,22 +167,10 @@ public class ExerciseTracker extends Thread implements LocationListener {
 
     }
 
-    private void permissionCheck(){
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-                    Log.i("LocationManager","PERMISSIONS DENIED");
-
-                    ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_FINE_LOCATION);
-                    ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACCESS_FINE_LOCATION);
-                    Log.i("LocationManager","PERMISSIONS GRANTED BY USER");
-                }
-            }
-        });
-    }
-
+    /**
+     * @param mActivity
+     * @return Exercise Tracker instance. Create a new one if no instance has been initialized yet
+     */
     public static ExerciseTracker getInstance(Activity mActivity){
         if(instance == null){
             instance = new ExerciseTracker(mActivity);

@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean walking;
 
+    //singleton
     private static MainActivity instance;
 
     @Override
@@ -35,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //assign instance
         instance = this;
 
+        //check all needed permissions. Perform permission request if necessary
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
@@ -47,28 +50,35 @@ public class MainActivity extends AppCompatActivity {
             Log.i("LocationManager","PERMISSIONS GRANTED BY USER");
         }
 
+        //Create Exercise Tracker
         ExerciseTracker tracker = ExerciseTracker.getInstance(MainActivity.this);
 
+        //initialize start/stop button
         startEndButton = (Button) findViewById(R.id.btnStartEndWalk);
 
+        //assign onClick behavior
         startEndButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO start/stop recording time and location
                 if(walking){
+                    //stop recording and start result activity if user is already walking
                     startEndButton.setText(R.string.start);
                     Intent startResults = new Intent(MainActivity.this, ExerciseResultActivity.class);
                     tracker.endRecording();
                     MainActivity.this.startActivity(startResults);
                 } else {
+                    //start tracker thread if user is not yet walking
                     startEndButton.setText(R.string.end);
                     tracker.start();
                 }
+                //invert "status" boolean
                 walking = !walking;
             }
         });
 
     }
+
+    //return singleton instance
     public static MainActivity getInstance(){
         if(instance == null){
             instance = new MainActivity();
