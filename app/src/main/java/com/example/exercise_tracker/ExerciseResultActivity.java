@@ -2,6 +2,7 @@ package com.example.exercise_tracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,7 +27,22 @@ public class ExerciseResultActivity extends AppCompatActivity {
         max_alt = (TextView) findViewById(R.id.maxAltText);
 
         //create Exercise Report object based on location markers
-        ExerciseReport exerciseReport = new ExerciseReport(ExerciseTracker.getInstance(this).locationMarkers);
+        ExerciseReport exerciseReport = new ExerciseReport(ExerciseTracker.getInstance(MainActivity.getInstance()).locationMarkers);
+
+        //set colors of text views according to whether or not the user goals have been achieved
+        if(MainActivity.getInstance().getDistanceGoal() <= 0)
+            distance.setTextColor(Color.WHITE);
+        else if(exerciseReport.getTotal_distance() < MainActivity.getInstance().getDistanceGoal())
+            distance.setTextColor(Color.RED);
+        else
+            distance.setTextColor(Color.GREEN);
+
+        if(MainActivity.getInstance().getPaceGoal() <= 0)
+            avg_speed.setTextColor(Color.WHITE);
+        else if(exerciseReport.getAvg_speed() < MainActivity.getInstance().getPaceGoal())
+            avg_speed.setTextColor(Color.RED);
+        else
+            avg_speed.setTextColor(Color.GREEN);
 
         //assign texts to TextViews
         duration.setText(exerciseReport.getExerciseTime()+"s");

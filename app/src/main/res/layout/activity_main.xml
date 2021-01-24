@@ -22,10 +22,7 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="36sp"
-        android:typeface="normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:typeface="normal"/>
 
     <ImageView
         android:id="@+id/imgWalkIcon"
@@ -34,22 +31,53 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="5"
         android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/distanceGoalInput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerText"
         app:srcCompat="@drawable/exercise_walk_icon" />
+
+    <TextView
+        android:id="@+id/headerText2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"
+        android:allowUndo="false"
+        android:background="@android:color/darker_gray"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:text="@string/goals"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:typeface="normal"/>
+
+    <EditText
+        android:id="@+id/distanceGoalInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/light_gray"
+        android:ems="10"
+        android:hint="@string/distance_goal"
+        android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="@color/light_gray" />
+
+    <EditText
+        android:id="@+id/paceGoalInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/light_gray"
+        android:ems="10"
+        android:hint="@string/pace_goal"
+        android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="@color/light_gray" />
 
     <Button
         android:id="@+id/btnStartEndWalk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
         android:layout_marginBottom="16dp"
         android:layout_weight=".3"
         android:backgroundTint="@color/light_gray"
         android:backgroundTintMode="screen"
         android:text="@string/start"
         android:textColor="@android:color/white" />
-
 </androidx.appcompat.widget.LinearLayoutCompat>

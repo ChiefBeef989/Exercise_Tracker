@@ -25,6 +25,11 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 
     private Button startEndButton;
+    private TextView distanceGoalView;
+    private TextView paceGoalView;
+
+    private int distanceGoal;
+    private int paceGoal;
 
     private boolean walking;
 
@@ -53,8 +58,10 @@ public class MainActivity extends AppCompatActivity {
         //Create Exercise Tracker
         ExerciseTracker tracker = ExerciseTracker.getInstance(MainActivity.this);
 
-        //initialize start/stop button
+        //initialize start/stop button and goal text views
         startEndButton = (Button) findViewById(R.id.btnStartEndWalk);
+        distanceGoalView = (TextView) findViewById(R.id.distanceGoalInput);
+        paceGoalView = (TextView) findViewById(R.id.paceGoalInput);
 
         //assign onClick behavior
         startEndButton.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +74,17 @@ public class MainActivity extends AppCompatActivity {
                     tracker.endRecording();
                     MainActivity.this.startActivity(startResults);
                 } else {
-                    //start tracker thread if user is not yet walking
+                    //save user goals and start tracker thread if user is not yet walking
+                    if(distanceGoalView.getText().toString().isEmpty())
+                        distanceGoal = 0;
+                    else
+                        distanceGoal = Integer.parseInt(distanceGoalView.getText().toString());
+
+                    if(paceGoalView.getText().toString().isEmpty())
+                        paceGoal = 0;
+                    else
+                        paceGoal = Integer.parseInt(paceGoalView.getText().toString());
+
                     startEndButton.setText(R.string.end);
                     tracker.start();
                 }
@@ -76,6 +93,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public int getDistanceGoal() {
+        return distanceGoal;
+    }
+
+    public int getPaceGoal() {
+        return paceGoal;
     }
 
     //return singleton instance

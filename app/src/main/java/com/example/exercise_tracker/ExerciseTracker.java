@@ -1,25 +1,19 @@
 package com.example.exercise_tracker;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,8 +25,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ExerciseTracker extends Thread implements LocationListener {
 
@@ -40,7 +32,7 @@ public class ExerciseTracker extends Thread implements LocationListener {
     private static ExerciseTracker instance;
 
     //activity needed to access system services/permissions
-    Activity mActivity;
+    MainActivity mActivity;
 
     //variables related to exercise
     LocationManager locationManager;
@@ -52,7 +44,7 @@ public class ExerciseTracker extends Thread implements LocationListener {
     BufferedWriter bufferedWriter;
 
     //initialize fields and singleton
-    public ExerciseTracker(Activity activity) {
+    public ExerciseTracker(MainActivity activity) {
         this.mActivity = activity;
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         locationMarkers = new ArrayList<LocationMarker>();
@@ -131,9 +123,18 @@ public class ExerciseTracker extends Thread implements LocationListener {
         locationMarkers.add(tmpLocation);
 
         //calculate distance in meters to last location marker (skips first marker)
-        if(locationMarkers.size() > 1)
-            tmpLocation.setDistToLastLocation(tmpLocation.calculateDistance(locationMarkers.get(locationMarkers.indexOf(tmpLocation)-1)));
-
+        if(locationMarkers.size() > 1) {
+            tmpLocation.setDistAndPaceToLastLocation(tmpLocation.calculateDistance(locationMarkers.get(locationMarkers.indexOf(tmpLocation) - 1)));
+            //inform user if pace in the last 5s was slower than the set goal
+            if(tmpLocation.getPaceToLastLocation() < mActivity.getPaceGoal()){
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(mActivity.getBaseContext(),"Your pace in the last 5 seconds was slower than your goal!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
         //add <trkpt> element to gpx file
         try{
             bufferedWriter.write("\t\t\t<trkpt lat=\"" + latitude + "\" long=\"" + longitude + "\">");
@@ -171,7 +172,7 @@ public class ExerciseTracker extends Thread implements LocationListener {
      * @param mActivity
      * @return Exercise Tracker instance. Create a new one if no instance has been initialized yet
      */
-    public static ExerciseTracker getInstance(Activity mActivity){
+    public static ExerciseTracker getInstance(MainActivity mActivity){
         if(instance == null){
             instance = new ExerciseTracker(mActivity);
         }

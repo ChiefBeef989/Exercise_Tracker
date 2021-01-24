@@ -15,4 +15,7 @@
     <string name="max_altitude">Maximum altitude:</string>
     <string name="speed_graph">Walking speed over time</string>
     <string name="timer_start">00:00:00</string>
+    <string name="goals">Exercise Goals</string>
+    <string name="distance_goal">Distance goal (m)</string>
+    <string name="pace_goal">Average pace goal (km/h)</string>
 </resources>

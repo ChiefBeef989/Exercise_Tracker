@@ -12,6 +12,7 @@ public class LocationMarker {
     private float longitude;
     private float altitude;
     private float distToLastLocation;
+    private float paceToLastLocation;
     private LocalDateTime timeStamp;
 
     /**
@@ -26,7 +27,8 @@ public class LocationMarker {
         this.longitude = longitude;
         this.altitude = altitude;
         this.timeStamp = timeStamp;
-        this.distToLastLocation = 0;
+        this.distToLastLocation = 0f;
+        this.paceToLastLocation = 0f;
     }
 
     /**
@@ -56,13 +58,19 @@ public class LocationMarker {
         return distance;
     }
 
-    //basic getters and setter
-    public void setDistToLastLocation(float distToLastLocation) {
+    //set distance to last location and calculate pace
+    public void setDistAndPaceToLastLocation(float distToLastLocation) {
         this.distToLastLocation = distToLastLocation;
+        this.paceToLastLocation = (distToLastLocation/5)*3.6f;
     }
 
+    //basic getters
     public float getDistToLastLocation() {
         return distToLastLocation;
+    }
+
+    public float getPaceToLastLocation() {
+        return paceToLastLocation;
     }
 
     public float getLatitude() {

@@ -67,9 +67,16 @@ public class ReportGraph extends View {
 
         Paint graphDivider = new Paint();
         graphDivider.setColor(R.color.light_gray);
+        graphDivider.setStrokeWidth(3f);
+        graphDivider.setStyle(Paint.Style.FILL);
+
+        Paint goalPaint = new Paint();
+        goalPaint.setColor(Color.GREEN);
+        goalPaint.setStrokeWidth(3f);
+        goalPaint.setStyle(Paint.Style.FILL);
 
         Paint textPaint = new Paint();
-        textPaint.setTextSize(30f);
+        textPaint.setTextSize(35f);
         textPaint.setColor(Color.BLACK);
 
         Paint dot = new Paint();
@@ -89,14 +96,18 @@ public class ReportGraph extends View {
 
         //draw lines indicating walking speed from 1-10km/h
         for(int i = 0; i < 11; i++){
-            canvas.drawLine(0,(cHeight/11)*i,cWidth,(cHeight/11)*i,graphDivider);
-            canvas.drawText(-(i-11) + "km/h",2f,(cHeight/11)*i,textPaint);
+            //paint pace goal line green
+            if(-(i-11) == MainActivity.getInstance().getPaceGoal())
+                canvas.drawLine(0,(cHeight/11)*i,cWidth,(cHeight/11)*i,goalPaint);
+            else
+                canvas.drawLine(0,(cHeight/11)*i,cWidth,(cHeight/11)*i,graphDivider);
+
+            canvas.drawText(-(i-11) + "km/h",10f,(cHeight/11)*i,textPaint);
         }
 
-        //calculate speed, draw dot and create a line for the graph path
+        //draw dot and create a line for the graph path
         for(int i = 1; i < records.size(); i++){
-            float speed = ((records.get(i).getDistToLastLocation())/5)*3.6f;
-            float y = cHeight-((cHeight/11)*speed);
+            float y = cHeight-((cHeight/11)*records.get(i).getPaceToLastLocation());
 
             graph.lineTo((cWidth/records.size())*i,y);
 
