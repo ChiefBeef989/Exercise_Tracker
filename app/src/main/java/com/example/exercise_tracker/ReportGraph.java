@@ -64,6 +64,7 @@ public class ReportGraph extends View {
         graphPaint.setColor(Color.BLACK);
         graphPaint.setStyle(Paint.Style.STROKE);
         graphPaint.setStrokeWidth(2f);
+        graphPaint.setAntiAlias(true);
 
         Paint graphDivider = new Paint();
         graphDivider.setColor(R.color.light_gray);
@@ -76,7 +77,7 @@ public class ReportGraph extends View {
         goalPaint.setStyle(Paint.Style.FILL);
 
         Paint textPaint = new Paint();
-        textPaint.setTextSize(35f);
+        textPaint.setTextSize(45f);
         textPaint.setColor(Color.BLACK);
 
         Paint dot = new Paint();

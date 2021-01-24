@@ -34,7 +34,7 @@
         app:srcCompat="@drawable/exercise_walk_icon" />
 
     <TextView
-        android:id="@+id/headerText2"
+        android:id="@+id/exerciseGoalsHeader"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".5"

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -39,7 +38,7 @@ public class ExerciseResultActivity extends AppCompatActivity {
 
         if(MainActivity.getInstance().getPaceGoal() <= 0)
             avg_speed.setTextColor(Color.WHITE);
-        else if(exerciseReport.getAvg_speed() < MainActivity.getInstance().getPaceGoal())
+        else if(exerciseReport.getAvgSpeed() < MainActivity.getInstance().getPaceGoal())
             avg_speed.setTextColor(Color.RED);
         else
             avg_speed.setTextColor(Color.GREEN);
@@ -47,8 +46,8 @@ public class ExerciseResultActivity extends AppCompatActivity {
         //assign texts to TextViews
         duration.setText(exerciseReport.getExerciseTime()+"s");
         distance.setText(exerciseReport.getTotal_distance()+"m");
-        avg_speed.setText(exerciseReport.getAvg_speed()+"km/h");
-        min_alt.setText(exerciseReport.getMin_alt()+"m");
-        max_alt.setText(exerciseReport.getMax_alt()+"m");
+        avg_speed.setText(exerciseReport.getAvgSpeed()+"km/h");
+        min_alt.setText(exerciseReport.getMinAlt()+"m");
+        max_alt.setText(exerciseReport.getMaxAlt()+"m");
     }
 }
